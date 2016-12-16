@@ -17,8 +17,9 @@ class CreateNotesTable extends Migration
             $table->uuid('nid');
             $table->uuid('uid');
             $table->boolean('list');
-            $table->timestamp('reminder');
-            $table->timestamps();
+            $table->timestamp('reminder')->nullable();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             $table->primary('nid');
             $table->foreign('uid')->references('uid')->on('user');
         });
