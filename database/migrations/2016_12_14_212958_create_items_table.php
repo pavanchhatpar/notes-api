@@ -18,6 +18,8 @@ class CreateItemsTable extends Migration
             $table->uuid('nid');
             $table->boolean('checked');
             $table->longText('content');
+            $table->integer('_constructedStringLength');
+            $table->integer('read');
             $table->primary('iid');
             $table->foreign('nid')->references('nid')->on('note');
         });
