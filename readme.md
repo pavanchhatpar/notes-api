@@ -29,7 +29,9 @@ A Laravel Lumen framework based API
  10. To run the application, issue this command 
  
     `php -S localhost:9000 -t pulbic`.
+
 ## Usage
+
  1. Make a `POST` request to `http://localhose:9000/oauth/token`. An example body content would be like,
  
     ```
