@@ -13,13 +13,12 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('user', function (Blueprint $table) {
-            $table->uuid('uid');
+        Schema::create('users', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('name');
             $table->string('email');
             $table->string('password');
             $table->string('salt')->unique();
-            $table->primary('uid');
             $table->unique('email');
         });
     }
@@ -31,6 +30,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('users');
     }
 }

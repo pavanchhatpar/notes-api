@@ -13,15 +13,15 @@ class CreateItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('item', function (Blueprint $table) {
-            $table->uuid('iid');
+        Schema::create('items', function (Blueprint $table) {
+            $table->uuid('id');
             $table->uuid('nid');
             $table->boolean('checked');
             $table->longText('content');
             $table->integer('_constructedStringLength');
             $table->integer('read');
-            $table->primary('iid');
-            $table->foreign('nid')->references('nid')->on('note');
+            $table->primary('id');
+            $table->foreign('nid')->references('id')->on('notes');
         });
     }
 
@@ -32,6 +32,6 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item');
+        Schema::dropIfExists('items');
     }
 }

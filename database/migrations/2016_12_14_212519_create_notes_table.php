@@ -13,15 +13,15 @@ class CreateNotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('note', function (Blueprint $table) {
-            $table->uuid('nid');
-            $table->uuid('uid');
+        Schema::create('notes', function (Blueprint $table) {
+            $table->uuid('id');
+            $table->integer('uid', false, true);
             $table->boolean('list');
             $table->timestamp('reminder')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-            $table->primary('nid');
-            $table->foreign('uid')->references('uid')->on('user');
+            $table->primary('id');
+            $table->foreign('uid')->references('id')->on('users');
         });
     }
 
@@ -32,6 +32,6 @@ class CreateNotesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('note');
+        Schema::dropIfExists('notes');
     }
 }

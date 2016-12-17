@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,6 +11,9 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    return $app->version();
+$app->group(['middleware' => 'auth'], function () use ($app) {
+    $app->get('/', function (Request $request)  {
+        // Uses Auth Middleware
+        return response()->json($request->user());
+    });
 });
