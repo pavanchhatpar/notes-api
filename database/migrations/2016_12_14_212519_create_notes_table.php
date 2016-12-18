@@ -14,13 +14,12 @@ class CreateNotesTable extends Migration
     public function up()
     {
         Schema::create('notes', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->increments('id');
             $table->integer('uid', false, true);
-            $table->boolean('list');
+            $table->boolean('list')->default(false);
             $table->timestamp('reminder')->nullable();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-            $table->primary('id');
             $table->foreign('uid')->references('id')->on('users');
         });
     }

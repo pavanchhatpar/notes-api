@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
@@ -22,6 +22,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'id',
         'name',
         'email',
+        'salt',
+        'password'
     ];
 
     /**
@@ -30,6 +32,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password'
+
     ];
+
+    public $timestamps = false;
 }
