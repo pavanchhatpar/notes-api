@@ -39,7 +39,7 @@ class NoteController extends Controller
      * Find particular note of a user.
      *
      * @param  Request  $request
-     * @param  string $id
+     * @param  integer $id
      * @return \Illuminate\Http\Response
      */
     public function find(Request $request, $id) {
@@ -90,7 +90,7 @@ class NoteController extends Controller
 
                 $item->nid = $note->id;
                 if(array_key_exists('checked', $i)) {
-                    $item->check = $i['checked'];
+                    $item->checked = $i['checked'];
                 }
                 $item->content = $i['content'];
                 $item->_constructedStringLength = $i['_constructedStringLength'];
@@ -105,5 +105,133 @@ class NoteController extends Controller
             return $this->serverError(['message' => 'Something went wrong :(']);
         }
 
+    }
+
+    /**
+     * Delete a user's particular note
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function deleteThisNote(Request $request, $id) {
+        $uid = $request->user()->id;
+        $count = Note::where([['id', $id],['uid', $uid]])->count();
+        if($count > 1) {
+            return $this->badRequest(['message'=> 'SQL injection is not allowed.']);
+        } else if ($count === 0) {
+            return $this->notFound(['message'=> 'This note does not exist']);
+        }
+        $itemsDeleted = Item::where('nid',$id)->delete();
+        $noteDeleted = Note::where([['id', $id],['uid', $uid]])->delete();
+        if($noteDeleted === 1) {
+            return $this->ok([
+                'note_id'      => $id,
+                'deleted'      => true,
+                'itemsDeleted' => $itemsDeleted
+            ]);
+        } else {
+            return $this->serverError(['message' => 'Something went wrong :(']);
+        }
+    }
+
+    /**
+     * Update a user's particular note
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateThisNote(Request $request, $id) {
+        $uid = $request->user()->toArray()['id'];
+        $count = Note::where([['id', $id],['uid', $uid]])->count();
+        if($count > 1) {
+            return $this->badRequest(['message'=> 'SQL injection is not allowed.']);
+        } else if ($count === 0) {
+            return $this->notFound(['message'=> 'This note does not exist']);
+        }
+        if ($request->has('items')) {
+            $items = $request->items;
+            foreach ($items as $item) {
+                if(array_key_exists('id', $item)) {
+                    //return $this->badRequest(['message'=>'Item identification missing']);
+                    $c = Item::where([['id', $item['id']],['nid', $id]])->count();
+                    if($c > 1) {
+                        return $this->badRequest(['message'=> 'SQL injection is not allowed.']);
+                    } else if ($c === 0) {
+                        $msg = 'The item'.$item['id'].' does not exist';
+                        return $this->notFound(['message'=> $msg]);
+                    }
+                    if(array_key_exists('content', $item)) {
+                        if(!array_key_exists('_constructedStringLength', $item) || !array_key_exists('read', $item)) {
+                            return $this->badRequest(['message'=>'Content information incomplete']);
+                        }
+                    } else if(array_key_exists('_constructedStringLength', $item) || array_key_exists('read', $item)) {
+                        return $this->badRequest(['message'=>'Content information incomplete']);
+                    } else if(!array_key_exists('checked', $item) && (!array_key_exists('deleted', $item) || !$item['deleted'])){
+                        return $this->badRequest(['message'=>'Nothing to update']);
+                    }
+                } else {
+                    if(!array_key_exists('content', $item)
+                    || !array_key_exists('_constructedStringLength', $item) || !array_key_exists('read', $item)) {
+                        return $this->badRequest(['message' => 'Content missing']);
+                    }
+                }
+            }
+        }
+        $data = [];
+        if($request->has('list')) {
+            $data['list'] = $request->list;
+        }
+        if($request->has('reminder')) {
+            $data['reminder'] = $request->reminder;
+        }
+        $updatedNotes = Note::where([['uid', $uid],['id', $id]])->update($data);
+        if($updatedNotes === 1) {
+            if ($request->has('items')) {
+                $items = $request->items;
+                foreach ($items as $i) {
+                    if(array_key_exists('id', $i)) {
+                        if(array_key_exists('deleted', $i)) {
+                            $deletedCount = Item::where([['id',$i['id']],['nid',$id]])->delete();
+                            if($deletedCount > 1) {
+                                $this->serverError(['message'=>'Something went wrong :( 1']);
+                            }
+                        } else {
+                            $item = [];
+                            if (array_key_exists('checked', $i)) {
+                                $item['checked'] = $i['checked'];
+                            }
+                            if (array_key_exists('content', $i)) {
+                                $item['content'] = $i['content'];
+                                $item['_constructedStringLength'] = $i['_constructedStringLength'];
+                                $item['read'] = $i['read'];
+                            }
+                            $updatedCount = Item::where([['nid', $id], ['id', $i['id']]])->update($item);
+                            if ($updatedCount > 1) {
+                                return $this->serverError(['message' => 'Something went wrong :( 2']);
+                            }
+                        }
+                    } else {
+                        $item = new Item;
+
+                        $item->nid = $id;
+                        if(array_key_exists('checked', $i)) {
+                            $item->checked = $i['checked'];
+                        }
+                        $item->content = $i['content'];
+                        $item->_constructedStringLength = $i['_constructedStringLength'];
+                        $item->read = $i['read'];
+
+                        $item->saveOrFail();
+
+                    }
+                }
+            }
+            return $this->find($request, $id);
+        } else {
+            return $this->serverError(['message'=>"Something went wrong :("]);
+        }
     }
 }

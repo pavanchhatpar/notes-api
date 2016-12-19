@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 /*
  * Methods that don't require OAuth 2.0 go here
  */
-$app->group(['prefix' => 'open'], function() use($app) {
+$app->group(['middleware' => 'client-credentials'], function() use($app) {
     /*
      * All GET methods go here
      */
@@ -56,8 +56,10 @@ $app->group(['middleware' => 'auth:api'], function() use($app) {
     /*
      * All PUT methods go here
      */
+    $app->put('/note/{id}', 'NoteController@updateThisNote');
 
     /*
      * All DELETE methods go here
      */
+    $app->delete('/note/{id}', 'NoteController@deleteThisNote');
 });

@@ -30,7 +30,7 @@ class UserController extends Controller
     /**
      * Display a listing of the users.
      *
-     * @param string $id
+     * @param integer $id
      * @return \Illuminate\Http\Response
      */
     public function find($id) {
