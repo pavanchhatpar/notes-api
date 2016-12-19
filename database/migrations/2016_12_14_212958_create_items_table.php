@@ -14,13 +14,12 @@ class CreateItemsTable extends Migration
     public function up()
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->uuid('nid');
-            $table->boolean('checked');
+            $table->increments('id');
+            $table->integer('nid', false, true);
+            $table->boolean('checked')->default(false);
             $table->longText('content');
             $table->integer('_constructedStringLength');
             $table->integer('read');
-            $table->primary('id');
             $table->foreign('nid')->references('id')->on('notes');
         });
     }

@@ -11,9 +11,55 @@ use Illuminate\Http\Request;
 |
 */
 
-$app->group(['middleware' => 'auth'], function () use ($app) {
+/*
+ * Methods that don't require OAuth 2.0 go here
+ */
+$app->group(['middleware' => 'client-credentials'], function() use($app) {
+    /*
+     * All GET methods go here
+     */
+
+    /*
+     * All POST methods go here
+     */
+    $app->post('/signup', 'UserController@makeNewUser');
+    /*
+     * All PUT methods go here
+     */
+
+    /*
+     * All DELETE methods go here
+     */
+});
+
+/*
+ * All routes which require to be OAuth 2.0 protected go in this group
+ */
+$app->group(['middleware' => 'auth:api'], function() use($app) {
     $app->get('/', function (Request $request)  {
-        // Uses Auth Middleware
         return response()->json($request->user());
     });
+
+    /*
+     * All GET methods go here
+     */
+    $app->get('/users', 'UserController@all');
+    $app->get('/user/{id}', 'UserController@find');
+    $app->get('/notes', 'NoteController@all');
+    $app->get('/note/{id}', 'NoteController@find');
+
+    /*
+     * All POST methods go here
+     */
+    $app->post('/note', 'NoteController@makeNewNote');
+
+    /*
+     * All PUT methods go here
+     */
+    $app->put('/note/{id}', 'NoteController@updateThisNote');
+
+    /*
+     * All DELETE methods go here
+     */
+    $app->delete('/note/{id}', 'NoteController@deleteThisNote');
 });

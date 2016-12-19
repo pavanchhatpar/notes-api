@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Hashing\BcryptHasher;
 use Illuminate\Support\Facades\DB;
 
-use App\User;
-
 
 
 class UsersTableSeeder extends Seeder
@@ -26,7 +24,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'admin',
             'email' => 'lumen.api.admin@gmail.com',
             'password' => $this->hasher->make('12345678'),
-            'salt' => bin2hex(random_bytes(64)),
+            'salt' => base64_encode(random_bytes(128)),
         ]);
     }
 }
