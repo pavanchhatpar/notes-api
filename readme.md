@@ -32,7 +32,7 @@ A Laravel Lumen framework based API
 
 ## Usage
 
- 1. Make a `POST` request to `http://localhose:9000/oauth/token`. An example body content would be like,
+ 1. Make a `POST` request to `http://localhost:9000/oauth/token`. An example body content would be like,
  
     ```
     {
