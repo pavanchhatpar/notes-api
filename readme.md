@@ -37,14 +37,14 @@ A Laravel Lumen framework based API
     ```
     {
         "username": "lumen.api.admin@gmail.com",
-        "password": "12345678"
+        "password": "12345678",
         "client_id": 2,
-        "client_secret": "eRlUMINSSgmqXOUUJIISDQPFpfGODLiPTJ6wUKXQ"
+        "client_secret": "eRlUMINSSgmqXOUUJIISDQPFpfGODLiPTJ6wUKXQ",
         "grant_type": "password"
     }
     ```
  2. The returned `access_token` and `refresh_token` needs to be kept referenced.
- 3. To make any further requests to defined routes add the `access_token` as Authorization header.
+ 3. To make any further requests to defined routes add the `access_token` as Authorization header as 'Bearer <access_token>'.
  4. To refresh a token once expired, make a similar request as in step one, only the body content would be like,
  
      ```
@@ -54,4 +54,5 @@ A Laravel Lumen framework based API
             "grant_type": "refresh_token",
             "refresh_token": "VN3LVe+knMmNcS4tf9J3rPAorWGrkgriYdtbMXcvzo53loo0A1la9jJYxrtWfQBMq8Lr2QwT2JL/VeTT6fPysa+MZAbtd14McXqK++1diZuTmNNU/YbuhmSWwudcTFAv+JLYB65v9uL5Evc9DTCS1DNNFN/Nt+6QyM0RLRJgNxCSDtIx0donJ0dfAl1qtKsRkSdbFJB+g1DVm6SSHwLBjwIPavoXBxOcK1maLQj1wd4P8SXU/m1aNYLLQL9fQdFO/mqkKpJXoOcfc3U4ALJ0mMYfnEXsz0tpeR+u6JeX/HNn2MTj4EStHEqm1g8GLqXQLnAj+HVNgMLfoDWrDv+3scPxXAryXn5B1HF2Ysv9pQ8n3xMMGB9hzcdsJNQ60cTRufSGwWLdkRlF4eO3ZYm9pZo6jiFCtApmE2/ARgJonefPc9tiJ+27ji+u+GmEE9mP3Csy5Ud2xdrERMN9MDEg9JQwWAox8TGI5RjQVgoYceuQHcB6eHt1UF69AN3WN3lnegr0U3k7lGBQpRzgrRmoyiVhBoAcbi+KrO7FbZDcOkVL8RUXXVlalY+OitJIdpmGmJEp6z7qOONh3VRgknJf46Q8mHDaH+4Z/+3mpVqIiJQ7YhVo3xIIJYVZFMYECMfaro+HRJ80uhQikIN8c9GTo4DZqqU6X0hP2lU6W7Kx3uY="
         }
+    ```
      
