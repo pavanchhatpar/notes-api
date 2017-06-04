@@ -24,7 +24,6 @@ class UsersTableSeeder extends Seeder
             'name' => 'admin',
             'email' => 'lumen.api.admin@gmail.com',
             'password' => $this->hasher->make('12345678'),
-            'salt' => base64_encode(random_bytes(128)),
         ]);
     }
 }

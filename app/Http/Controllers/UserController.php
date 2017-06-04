@@ -63,14 +63,12 @@ class UserController extends Controller
         if(sizeof(User::where('email', $credentials['email'])->get()->toArray()) !== 0) {
             return $this->conflict(['message' => 'That email address is already signed up']);
         }
-        while(sizeof(User::where('salt',$salt = base64_encode(random_bytes(128)))->get()) !== 0);
         $user = new User;
 
         $user->email    = $credentials['email'];
         $user->password = $credentials['password'];
         $user->name     = $credentials['name'];
-        $user->salt     = $salt;
-
+        
         if($user->saveOrFail()) {
             return $this->created($user);
         } else {
